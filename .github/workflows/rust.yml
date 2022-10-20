@@ -14,11 +14,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: What kind of libssl is available on the building machine?
+      run: ls -la /lib64/ | grep libssl
     - name: Create a release build
       run: cargo build --release
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
-        # A file, directory or wildcard pattern that describes what to upload
-        path: target/
+        path: target/pod-philippkueng-mail
         if-no-files-found: error
