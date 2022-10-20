@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: What kind of libssl is available on the building machine?
-      run: ls -la /lib64/ | grep libssl
+      run: ls -la /lib64/
     - name: Create a release build
       run: cargo build --release
     - name: Upload a Build Artifact
