@@ -14,7 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Creating a release
+    - name: Create a release build
+      run: cargo build --release
+    - name: Create a release on GitHub
       uses: manoadamro/rust-release@028b5d008bac5437257ec3ec905b12aed11e766a
       with:
         # Github Repo Owner
