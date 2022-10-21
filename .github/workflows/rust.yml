@@ -17,7 +17,7 @@ jobs:
     - name: What kind of libssl is available on the building machine?
       run: ls -la /lib64/
     - name: Install libssl-dev
-      run: apt update && apt install libssl-dev -y
+      run: sudo apt-get update && sudo apt-get install libssl-dev -y
     - name: rustup toolchain install
       # You may pin to the exact commit or the version.
       # uses: dtolnay/rust-toolchain@1ce4a7352a1efe5dede2e52c75512b34256e4f44
