@@ -14,6 +14,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Directory to where the code is getting checked out to
+      run: pwd
+    - name: List the files
+      run: ls -la
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install build-essential libssl-dev musl-dev musl-tools -y
     - name: Build openssl
@@ -52,5 +56,5 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: target
+        path: /home/runner/work/pod-philippkueng-mail/pod-philippkueng-mail/target/x86_64-unknown-linux-musl/release/pod-philippkueng-mail
         if-no-files-found: error
