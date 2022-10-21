@@ -14,10 +14,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: What kind of libssl is available on the building machine?
-      run: ls -la /lib64/
-    - name: Install libssl-dev
-      run: sudo apt-get update && sudo apt-get install libssl-dev musl-dev -y
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install build-essential libssl-dev musl-dev musl-tools -y
+    - name: Build openssl
+      run: |
+        ln -s /usr/include/x86_64-linux-gnu/asm /usr/include/x86_64-linux-musl/asm
+        ln -s /usr/include/asm-generic /usr/include/x86_64-linux-musl/asm-generic
+        ln -s /usr/include/linux /usr/include/x86_64-linux-musl/linux
+        mkdir /musl 
+        wget https://github.com/openssl/openssl/archive/OpenSSL_1_1_1f.tar.gz
+        tar zxvf OpenSSL_1_1_1f.tar.gz
+        cd openssl-OpenSSL_1_1_1f/
+        CC="musl-gcc -fPIE -pie" ./Configure no-shared no-async --prefix=/musl --openssldir=/musl/ssl linux-x86_64
+        make depend
+        make -j$(nproc)
+        make install
+        
     - name: rustup toolchain install
       # You may pin to the exact commit or the version.
       # uses: dtolnay/rust-toolchain@1ce4a7352a1efe5dede2e52c75512b34256e4f44
@@ -29,10 +41,14 @@ jobs:
         target: x86_64-unknown-linux-musl
         # Comma-separated list of components to be additionally installed
         # components: # optional
+        
     - name: Create a release build
       run: cargo build --release --target=x86_64-unknown-linux-musl
       env:
         PKG_CONFIG_SYSROOT_DIR: "/"
+        PKG_CONFIG_ALLOW_CROSS: 1
+        OPENSSL_STATIC: true
+        OPENSSL_DIR: "/musl"
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
