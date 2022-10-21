@@ -16,10 +16,21 @@ jobs:
     - uses: actions/checkout@v3
     - name: What kind of libssl is available on the building machine?
       run: ls -la /lib64/
+    - name: rustup toolchain install
+      # You may pin to the exact commit or the version.
+      # uses: dtolnay/rust-toolchain@1ce4a7352a1efe5dede2e52c75512b34256e4f44
+      uses: dtolnay/rust-toolchain@v1
+      with:
+        # Rust toolchain specification -- see https://rust-lang.github.io/rustup/concepts/toolchains.html#toolchain-specification
+        toolchain: stable
+        # Target triple to install for this toolchain
+        target: x86_64-unknown-linux-musl
+        # Comma-separated list of components to be additionally installed
+        # components: # optional
     - name: Create a release build
-      run: cargo build --release
+      run: cargo build --release --target=x86_64-unknown-linux-musl
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: target/pod-philippkueng-mail
+        path: target
         if-no-files-found: error
